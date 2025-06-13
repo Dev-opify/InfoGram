@@ -1,4 +1,4 @@
-package com.example.info_gram
+package com.devopify.infogram
 
 import io.flutter.embedding.android.FlutterActivity
 

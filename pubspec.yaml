@@ -25,17 +25,14 @@ dependencies:
   webview_flutter: ^4.5.0
 
   # Emoji picker for chat
-  emoji_picker_flutter: ^1.6.2
+  emoji_selector: ^0.0.4
+
+
 
   # Shared preferences
   shared_preferences: ^2.2.2
 
-  # File picker and sharing
-  file_picker: ^6.1.1
-  share_plus: ^7.2.1
 
-  # PDF viewer
-  syncfusion_flutter_pdfviewer: ^24.2.6
 
   # SVG support
   flutter_svg: ^2.0.1

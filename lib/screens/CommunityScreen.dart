@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:emoji_selector/emoji_selector.dart'; // ✅ Replaced emoji picker
 
-import '../services/CommunityService.dart'; // Adjust the path accordingly
+import '../services/CommunityService.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -17,9 +17,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   final ScrollController _scrollController = ScrollController();
 
   late final CommunityService _chatService;
-  final String classId = "CSE2"; // Example class ID
-
-  bool _showEmojiPicker = false;
+  final String classId = "CSE2";
 
   @override
   void initState() {
@@ -57,7 +55,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
         .delete();
   }
 
-  Widget _buildMessageTile(Map<String, dynamic> messageData, bool isMe, String docId) {
+  Widget _buildMessageTile(
+      Map<String, dynamic> messageData, bool isMe, String docId) {
     return GestureDetector(
       onLongPress: isMe
           ? () => showDialog(
@@ -107,6 +106,24 @@ class _CommunityScreenState extends State<CommunityScreen> {
     );
   }
 
+  void _showEmojiBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SizedBox(
+        height: 300,
+        child: EmojiSelector(
+          onSelected: (emoji) {
+            setState(() {
+              _messageController.text += emoji.char;
+
+            });
+            Navigator.pop(context);
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
@@ -134,8 +151,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   itemBuilder: (context, index) {
                     final messageData =
                     messages[index].data()! as Map<String, dynamic>;
-                    final isMe =
-                        currentUser?.uid == messageData['senderId'];
+                    final isMe = currentUser?.uid == messageData['senderId'];
                     return _buildMessageTile(
                         messageData, isMe, messages[index].id);
                   },
@@ -144,15 +160,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
           ),
           const Divider(height: 1),
-          if (_showEmojiPicker)
-            SizedBox(
-              height: 250,
-              child: EmojiPicker(
-                onEmojiSelected: (category, emoji) {
-                  _messageController.text += emoji.emoji;
-                },
-              ),
-            ),
           Padding(
             padding:
             const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
@@ -160,11 +167,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.emoji_emotions_outlined),
-                  onPressed: () {
-                    setState(() {
-                      _showEmojiPicker = !_showEmojiPicker;
-                    });
-                  },
+                  onPressed: _showEmojiBottomSheet,
                 ),
                 Expanded(
                   child: TextField(
