@@ -3,6 +3,8 @@ import 'PremiumScreen.dart';
 import 'ScheduleScreen.dart';
 import 'CommunityScreen.dart';
 import 'SubjectScreen.dart';
+import 'chat_bot_screen.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -120,33 +122,42 @@ class HomeTab extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Chat Bot card
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.camera_alt_outlined, color: Colors.blue),
-                    const SizedBox(width: 12),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Chat Bot', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text('AI-powered learning assistant', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                        ],
+              // Chat Bot card with navigation
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ChatBotScreen()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.blue[50],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.camera_alt_outlined, color: Colors.blue),
+                      const SizedBox(width: 12),
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Chat Bot', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            Text('AI-powered learning assistant', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                          ],
+                        ),
                       ),
-                    ),
-                    CircleAvatar(
-                      backgroundColor: Colors.blueAccent,
-                      child: const Text('AI', style: TextStyle(color: Colors.white)),
-                    )
-                  ],
+                      CircleAvatar(
+                        backgroundColor: Colors.blueAccent,
+                        child: const Text('AI', style: TextStyle(color: Colors.white)),
+                      )
+                    ],
+                  ),
                 ),
               ),
+
               const SizedBox(height: 20),
 
               const Text('Your Subjects', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
