@@ -1,6 +1,7 @@
+// screens/Splash/SplashScreen.dart
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'HomeScreen.dart'; // Replace with your real home screen
+import '/services/auth_wrapper.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(const Duration(seconds: 2), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => const AuthWrapper()),
       );
     });
   }

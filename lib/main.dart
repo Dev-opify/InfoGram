@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'screens/SplashScreen.dart'; // ✅ Import SplashScreen
+import 'package:firebase_core/firebase_core.dart';
+import 'screens/Splash/SplashScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp();
 
   runApp(const StudentApp());
 }
@@ -20,7 +24,7 @@ class StudentApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const SplashScreen(), // ✅ Show splash first
+      home: const SplashScreen(),
     );
   }
 }

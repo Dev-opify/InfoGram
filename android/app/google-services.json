@@ -1,36 +1,26 @@
 {
   "project_info": {
-    "project_number": "497230091606",
-    "project_id": "info-gram-7db29",
-    "storage_bucket": "info-gram-7db29.firebasestorage.app"
+    "project_number": "358941920538",
+    "project_id": "uniconnect-a880a",
+    "storage_bucket": "uniconnect-a880a.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:497230091606:android:8f814dc1c5c108297bb2f7",
+        "mobilesdk_app_id": "1:358941920538:android:e3d1a482dfaaabe961b0a3",
         "android_client_info": {
           "package_name": "com.devopify.infogram"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "497230091606-lcmco04iqtdcilm1m73raevvvegtdfep.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBxmFM69R-FZt0NBKmxxI4Cp5Cdp7T1_GM"
+          "current_key": "AIzaSyBei0qVCNa3PV1zLvYfDbjfuTLbuStsdPA"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "497230091606-lcmco04iqtdcilm1m73raevvvegtdfep.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

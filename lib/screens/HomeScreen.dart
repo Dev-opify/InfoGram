@@ -1,10 +1,11 @@
+// HomeScreen.dart
 import 'package:flutter/material.dart';
-import 'PremiumScreen.dart';
-import 'ScheduleScreen.dart';
-import 'CommunityScreen.dart';
-import 'SubjectScreen.dart';
+import '/services/auth_service.dart';
+import 'Navigation Bar/PremiumScreen.dart';
+import 'Navigation Bar/ScheduleScreen.dart';
+import 'Navigation Bar/CommunityScreen.dart';
+import 'Navigation Bar/SubjectScreen.dart';
 import 'chat_bot_screen.dart';
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -84,10 +85,49 @@ class HomeTab extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.grey[300],
-                    child: const Icon(Icons.person),
+                  PopupMenuButton<String>(
+                    onSelected: (value) async {
+                      if (value == 'logout') {
+                        await _showLogoutDialog(context);
+                      }
+                    },
+                    itemBuilder: (BuildContext context) => [
+                      const PopupMenuItem<String>(
+                        value: 'profile',
+                        child: Row(
+                          children: [
+                            Icon(Icons.person, color: Colors.grey),
+                            SizedBox(width: 8),
+                            Text('Profile'),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem<String>(
+                        value: 'settings',
+                        child: Row(
+                          children: [
+                            Icon(Icons.settings, color: Colors.grey),
+                            SizedBox(width: 8),
+                            Text('Settings'),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem<String>(
+                        value: 'logout',
+                        child: Row(
+                          children: [
+                            Icon(Icons.logout, color: Colors.red),
+                            SizedBox(width: 8),
+                            Text('Logout', style: TextStyle(color: Colors.red)),
+                          ],
+                        ),
+                      ),
+                    ],
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.grey[300],
+                      child: const Icon(Icons.person),
+                    ),
                   ),
                 ],
               ),
@@ -103,7 +143,7 @@ class HomeTab extends StatelessWidget {
                 ),
                 child: const TextField(
                   decoration: InputDecoration(
-                    hintText: 'Hi Nainika',
+                    hintText: 'Hi there! Search anything...',
                     border: InputBorder.none,
                     icon: Icon(Icons.search),
                   ),
@@ -225,6 +265,33 @@ class HomeTab extends StatelessWidget {
     ];
     return gradients[index % gradients.length];
   }
+
+  Future<void> _showLogoutDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Logout'),
+          content: const Text('Are you sure you want to logout?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Logout', style: TextStyle(color: Colors.red)),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await AuthService().signOut();
+                // AuthWrapper will automatically navigate to LoginScreen
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
-
-

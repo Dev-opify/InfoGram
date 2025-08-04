@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_selector/emoji_selector.dart'; // ✅ Replaced emoji picker
 
-import '../services/CommunityService.dart';
+import '../../services/CommunityService.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
