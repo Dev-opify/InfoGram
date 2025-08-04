@@ -1,6 +1,9 @@
 // HomeScreen.dart
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '/services/auth_service.dart';
+import '../screens/ProfileScreen.dart';
 import 'Navigation Bar/PremiumScreen.dart';
 import 'Navigation Bar/ScheduleScreen.dart';
 import 'Navigation Bar/CommunityScreen.dart';
@@ -49,8 +52,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class HomeTab extends StatelessWidget {
+class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
+
+  @override
+  State<HomeTab> createState() => _HomeTabState();
+}
+
+class _HomeTabState extends State<HomeTab> {
+  String _firstName = '';
 
   final List<Map<String, String>> subjects = const [
     {'title': 'Maths', 'subtitle': 'Algebra, Calculus, Geometry'},
@@ -64,6 +74,36 @@ class HomeTab extends StatelessWidget {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        if (userDoc.exists) {
+          final data = userDoc.data()!;
+          final fullName = data['fullName'] ?? '';
+          setState(() {
+            // Extract first name (everything before the first space)
+            _firstName = fullName.split(' ').first;
+          });
+        }
+      } catch (e) {
+        // Handle error silently or show a snackbar if needed
+        print('Error loading user name: $e');
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -73,56 +113,27 @@ class HomeTab extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header row with logo and profile icon
+              // Header row with greeting and profile icon
               Row(
                 children: [
-                  const Text(
-                    'logo',
-                    style: TextStyle(
+                  Text(
+                    _firstName.isEmpty ? 'Hello!' : 'Hello $_firstName!',
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.blueAccent,
                     ),
                   ),
                   const Spacer(),
-                  PopupMenuButton<String>(
-                    onSelected: (value) async {
-                      if (value == 'logout') {
-                        await _showLogoutDialog(context);
-                      }
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProfileScreen(),
+                        ),
+                      );
                     },
-                    itemBuilder: (BuildContext context) => [
-                      const PopupMenuItem<String>(
-                        value: 'profile',
-                        child: Row(
-                          children: [
-                            Icon(Icons.person, color: Colors.grey),
-                            SizedBox(width: 8),
-                            Text('Profile'),
-                          ],
-                        ),
-                      ),
-                      const PopupMenuItem<String>(
-                        value: 'settings',
-                        child: Row(
-                          children: [
-                            Icon(Icons.settings, color: Colors.grey),
-                            SizedBox(width: 8),
-                            Text('Settings'),
-                          ],
-                        ),
-                      ),
-                      const PopupMenuItem<String>(
-                        value: 'logout',
-                        child: Row(
-                          children: [
-                            Icon(Icons.logout, color: Colors.red),
-                            SizedBox(width: 8),
-                            Text('Logout', style: TextStyle(color: Colors.red)),
-                          ],
-                        ),
-                      ),
-                    ],
                     child: CircleAvatar(
                       radius: 20,
                       backgroundColor: Colors.grey[300],
@@ -264,34 +275,5 @@ class HomeTab extends StatelessWidget {
       [Colors.deepPurple, Colors.purpleAccent],
     ];
     return gradients[index % gradients.length];
-  }
-
-  Future<void> _showLogoutDialog(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Logout'),
-          content: const Text('Are you sure you want to logout?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Logout', style: TextStyle(color: Colors.red)),
-              onPressed: () async {
-                Navigator.of(context).pop();
-                await AuthService().signOut();
-                // AuthWrapper will automatically navigate to LoginScreen
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 }
